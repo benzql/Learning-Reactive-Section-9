@@ -1,6 +1,6 @@
 import Createprojects from "./components/Createprojects";
 import Noprojects from "./components/Noprojects";
-import ShowProject from "./components/ShowProject";
+import ShowProjectDetail from "./components/ShowProjectDetail";
 
 import { useState } from "react";
 
@@ -9,6 +9,8 @@ function App() {
 
   const [hasNoProjects, setHasNoProjects] = useState(true)
   const [hasStartedNewProject, setHasStartedNewProject] = useState(false)
+  const [projectDetail, setProjectDetail] = useState({});
+
 
   function createProject(){
     setHasNoProjects(false);
@@ -17,10 +19,18 @@ function App() {
 
   function saveNewProject(newProject){
     setProjects([...projects, newProject]);
-    console.log(newProject);
+    setHasNoProjects(false);
+    setHasStartedNewProject(false);
+    setProjectDetail(newProject);
   }
 
+  function displayProject(idx){
+    setProjectDetail(projects[idx])
+  }
+   
+
   const sampleProject = {
+    id: 0,
     title: "Learning Project",
     dueDate: "Dec 29, 2024",
     description: "Learn React from the group up. \n\nStart with the basics, finish with advanced knowledge.",
@@ -35,15 +45,15 @@ function App() {
             <button className="px-4 py-2 text-xs md:text-base rounded-md bg-stone-700 text-stone-400 hover:bg-stone-600 hover:text-stone-100" onClick={createProject}>+ Add Project</button>
             {projects.length > 0 && 
               <ul className="mt-8">
-                {projects.map((p)=>
-                  <li className="px-4 py-2 hover:bg-stone-800 text-stone-400 hover:text-stone-100">{p.title}</li>
+                {projects.map((p, index)=>
+                  <li className="px-4 py-2 hover:bg-stone-800 text-stone-400 hover:text-stone-100" onClick={()=>displayProject(index)} key={index}>{p.title}</li>
                 )}
               </ul>
             }
           </aside>
           {hasNoProjects && <Noprojects handleClick={createProject}/>}
-          {hasStartedNewProject && <Createprojects handelSaveNewProject={saveNewProject}/>}
-          <ShowProject project={sampleProject}/>
+          {hasStartedNewProject && <Createprojects handelSaveNewProject={saveNewProject} index={projects.length}/>}
+          {(!hasNoProjects && !hasStartedNewProject) && <ShowProjectDetail project={projectDetail}/>}
         </main>
     </>
   );

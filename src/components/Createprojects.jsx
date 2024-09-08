@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-export default function Createprojects({handelSaveNewProject}){
+export default function Createprojects({handelSaveNewProject, index}){
     const title = useRef();
     const description = useRef();
     const dueDate = useRef();
@@ -15,10 +15,11 @@ export default function Createprojects({handelSaveNewProject}){
                     className="px-6 py-2 rounded-md bg-stone-800 text-stone-50 hover:bg-stone-950" 
                     onClick={()=>handelSaveNewProject(
                         {
+                            id: {index},
                             title: title.current.value,
                             description: description.current.value,
                             dueDate: dueDate.current.value,
-                            tasks:[]
+                            tasks:[],
                         }
                     )}>
                     Save
