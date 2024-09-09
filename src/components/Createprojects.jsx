@@ -4,7 +4,6 @@ export default function Createprojects({handelSaveNewProject, index}){
     const title = useRef();
     const description = useRef();
     const dueDate = useRef();
-
     
 
     return(
@@ -15,7 +14,7 @@ export default function Createprojects({handelSaveNewProject, index}){
                     className="px-6 py-2 rounded-md bg-stone-800 text-stone-50 hover:bg-stone-950" 
                     onClick={()=>handelSaveNewProject(
                         {
-                            id: {index},
+                            id: index,
                             title: title.current.value,
                             description: description.current.value,
                             dueDate: dueDate.current.value,
