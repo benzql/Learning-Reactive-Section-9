@@ -33,6 +33,11 @@ function App() {
     setHasStartedNewProject(true);
   }
 
+  function cancelCreateProject(){
+    setHasNoProjects(true);
+    setHasStartedNewProject(false);
+  }
+
   function saveNewProject(newProject){
     setProjects([...projects, newProject]);
     setHasNoProjects(false);
@@ -44,6 +49,7 @@ function App() {
     const newProjectDetails = {...projects[idx]}
     setProjectDetail(newProjectDetails);
     setHasNoProjects(false);
+    setHasStartedNewProject(false);
   }
 
   function deleteProject(idx){
@@ -62,19 +68,20 @@ function App() {
   }
 
   function addTask(newTask, idx){
-        setProjectDetail({...projectDetail, tasks:[...projectDetail.tasks, newTask]});
-        
-        const newProjectList = [...projects];
+    const newProjectList = [...projects];
+    newProjectList[idx].tasks.push(newTask);  
 
-        for (let i = 0; i<newProjectList.length;i++){
-          if (i===idx){
-            newProjectList[i].tasks.push(newTask);
-          }
-        }
-        setProjects(newProjectList);
-    }
+    setProjects(newProjectList);
+    setProjectDetail(newProjectList[idx]);
+  }
 
+  function removeTask(taskId, idx){
+    const newProjectList = [...projects];
+    newProjectList[idx].tasks.splice(taskId, 1);
     
+    setProjects(newProjectList);
+    setProjectDetail(newProjectList[idx]);
+  }
   
   return (
     <> 
@@ -91,8 +98,23 @@ function App() {
             }
           </aside>
           {hasNoProjects && <Noprojects handleClick={createProject}/>}
-          {hasStartedNewProject && <Createprojects handelSaveNewProject={saveNewProject} index={projects.length}/>}
-          {(!hasNoProjects && !hasStartedNewProject) && <ShowProjectDetail project={projectDetail} handleRemoveProject={deleteProject} handleAddNewTask={addTask}/>}
+          {
+            hasStartedNewProject && 
+            <Createprojects 
+              handelSaveNewProject={saveNewProject} 
+              index={projects.length} 
+              handleCancelNewProject={cancelCreateProject}
+            />
+          }
+          {
+            (!hasNoProjects && !hasStartedNewProject) && 
+            <ShowProjectDetail 
+              project={projectDetail} 
+              handleRemoveProject={deleteProject} 
+              handleAddNewTask={addTask} 
+              handleRemoveTask={removeTask}
+            />
+          }
         </main>
     </>
   );

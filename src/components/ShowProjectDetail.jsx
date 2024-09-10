@@ -1,6 +1,6 @@
 import Tasks from "./Tasks";
 
-export default function ShowProjectDetail({project, handleRemoveProject, handleAddNewTask}){
+export default function ShowProjectDetail({project, handleRemoveProject, handleAddNewTask, handleRemoveTask}){
     
     function deleteProject(projectIndex){
         handleRemoveProject(projectIndex);
@@ -8,6 +8,11 @@ export default function ShowProjectDetail({project, handleRemoveProject, handleA
 
     function addNewTask(newTask){
         handleAddNewTask(newTask, project.id);
+    }
+
+    function clearTask(taskId){
+        console.log(taskId);
+        handleRemoveTask(taskId, project.id);
     }
 
     return (
@@ -21,7 +26,7 @@ export default function ShowProjectDetail({project, handleRemoveProject, handleA
                 <p className="mb-4 text-stone-400">{project.dueDate}</p>
                 <p className="text-stone-600 whitespace-pre-wrap">{project.description}</p>
                 </header>
-                <Tasks tasks={project.tasks} handleNewTask = {addNewTask}/>
+                <Tasks tasks={project.tasks} handleNewTask = {addNewTask} handleClearTask={clearTask}/>
             </div>
         </>
     );
