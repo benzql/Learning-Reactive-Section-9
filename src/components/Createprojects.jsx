@@ -1,24 +1,41 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Button from "./Button";
 import Input from "./Input";
+import Modal from "./Modal";
 
 export default function Createprojects({handelSaveNewProject, index, handleCancelNewProject}){
     const title = useRef();
     const description = useRef();
     const dueDate = useRef();
+
+    const modal = useRef();
     
+    function saveNewProject(newProject){
+        if (newProject.title === '' || newProject.description === '' || newProject.dueDate === ''){
+            modal.current.open();
+            return;
+        }else{
+            handelSaveNewProject(newProject);
+        }
+    }
 
     return(
+        <>
+        <Modal ref={modal} buttonCaption="Okay">
+            <h2 className="text-xl font-bold text-stone-900 my-4">Invalid Input</h2>
+            <p className="text-stone-600 mb-4 ">Oops ... looks like you forgot to enter a value.</p>
+            <p className="text-stone-600 mb-4 ">Please make sure your provide a valid value for every input field.</p>
+        </Modal>
         <div className="w-3/4 mt-16 mr-16">
             <menu className="flex items-center justify-end gap-4 my-4">
-                <button className="text-stone-800 hover:text-stone-950" onClick={handleCancelNewProject}>Cancel</button>
-                <Button
-                    onClick={()=>handelSaveNewProject(
+                <Button isMainButton={false} onClick={handleCancelNewProject}>Cancel</Button>
+                <Button isMainButton
+                    onClick={()=>saveNewProject(
                         {
                             id: index,
-                            title: title.current.value,
-                            description: description.current.value,
-                            dueDate: dueDate.current.value,
+                            title: title.current.value.trim(),
+                            description: description.current.value.trim(),
+                            dueDate: dueDate.current.value.trim(),
                             tasks:[],
                         }
                     )}>
@@ -29,13 +46,8 @@ export default function Createprojects({handelSaveNewProject, index, handleCance
                 <Input ref={title}  label="TITLE" type="text"/>
                 <Input ref={description} label="DESCRIPTION" textarea/>
                 <Input ref={dueDate}label="DUE DATE" type="date"/>
-                {/* <label className="text-sm font-bold uppercase text-stone-500">TITLE</label>
-                <input ref={title} className="w-full p-1 border-b-2 rounded-sm border-stone-300 bg-stone-200 text-stone-600 focus:outline-none focus:border-stone-600" />
-                <label className="text-sm font-bold uppercase text-stone-500">DESCRIPTION</label>
-                <textarea rows='10' ref={description} className="w-full p-1 border-b-2 rounded-sm border-stone-300 bg-stone-200 text-stone-600 focus:outline-none focus:border-stone-600"></textarea>
-                <label className="text-sm font-bold uppercase text-stone-500">DUE DATE</label>
-                <input  className="w-full p-1 border-b-2 rounded-sm border-stone-300 bg-stone-200 text-stone-600 focus:outline-none focus:border-stone-600" type="date"/> */}
             </section>
         </div>
+        </>
     );
 }
